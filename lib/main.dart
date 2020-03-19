@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lesan/screens/levels_screen.dart';
-import 'package:lesan/screens/question1_screen.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -8,7 +7,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Lesan',
+      title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -20,15 +19,8 @@ class MyApp extends StatelessWidget {
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
         primarySwatch: Colors.blue,
-        appBarTheme: AppBarTheme(
-          color: Colors.orangeAccent,
-        )
       ),
-      initialRoute: LevelsScreen.id,
-      routes: {
-        LevelsScreen.id: (context)=>LevelsScreen(),
-        Question1Screen.id: (context)=>Question1Screen()
-      },
+      home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
