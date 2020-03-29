@@ -17,6 +17,7 @@ environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
+  audioplayers: ^0.14.2
   flutter:
     sdk: flutter
 
@@ -47,6 +48,14 @@ flutter:
   assets:
     - assets/audios/
     - assets/images/
+
+  fonts:
+    - family: Playfair
+      fonts:
+        - asset: assets/fonts/PlayfairDisplay-Bold.ttf
+        - asset: assets/fonts/PlayfairDisplay-ExtraBold.ttf
+          weight: 700
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

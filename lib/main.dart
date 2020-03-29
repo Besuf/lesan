@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' ;
 import 'package:lesan/screens/home_screen.dart';
 import 'package:lesan/screens/language_select.dart';
 import 'package:lesan/screens/word_puzzle_screen.dart';
+import 'package:lesan/screens/level_screen.dart';
+import 'package:lesan/screens/chooseImage_screen.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
     return MaterialApp(
       theme: ThemeData(
         brightness: Brightness.light,
@@ -15,7 +22,7 @@ class MyApp extends StatelessWidget {
         accentColor: Colors.green[600],
 
         // Define the default font family.
-        fontFamily: 'Georgia',
+        fontFamily: 'Playfair',
 
         // Define the default TextTheme. Use this to specify the default
         // text styling for headlines, titles, bodies of text, and more.
@@ -31,11 +38,13 @@ class MyApp extends StatelessWidget {
               color: Colors.black87),
         ),
       ),
-      initialRoute: WordPuzzle.routeName,
+      initialRoute: LevelScreen.routeName,
       routes: {
         HomeScreen.routeName: (_) => HomeScreen(),
         LanguageSelect.routeName: (_) => LanguageSelect(),
         WordPuzzle.routeName: (_) => WordPuzzle(),
+        LevelScreen.routeName: (_) => LevelScreen(),
+        ChooseImageScreen.routeName: (_)=>ChooseImageScreen()
       },
     );
   }
