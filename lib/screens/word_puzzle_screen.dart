@@ -1,48 +1,33 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-//import 'package:just_audio/just_audio.dart';
+import 'package:lesan/screens/level_screen.dart';
+import 'package:lesan/models/questionTypes.dart';
+import 'package:audioplayers/audio_cache.dart';
 
-class Puzzle {
-  String sourceText;
-  List<Word> wordChoices;
-  List<Word> correctSequence;
 
-  Puzzle({this.sourceText, this.wordChoices, this.correctSequence});
-}
-
-class Word {
-  String text;
-  bool selected = false;
-
-  Word(this.text);
-
-  @override
-  bool operator ==(other) => other is Word && other.text == text;
-
-  @override
-  int get hashCode => text.hashCode;
-}
 
 class WordPuzzle extends StatefulWidget {
   static const routeName = 'work_puzzle';
-
+  final Module module;
+  final int index;
+  WordPuzzle({Key key, @required this.module, this.index}): super(key: key);
   @override
   _WordPuzzleState createState() => _WordPuzzleState();
 }
 
 class WordChip extends StatelessWidget {
-  final Word _word;
+  final Word2 _word;
 
   WordChip(this._word);
 
   @override
   Widget build(BuildContext context) {
     return Chip(
-      backgroundColor: _word.selected ? Colors.grey[600] : Colors.grey[400],
+      backgroundColor: _word.selected ? Colors.white24 : Colors.green,
       label: Text(
         _word.text,
         style: TextStyle(
-          color: _word.selected ? Colors.grey[600] : Colors.black,
+          color: _word.selected ? Colors.white24 : Colors.white,
         ),
       ),
       shadowColor: Colors.black,
@@ -52,85 +37,49 @@ class WordChip extends StatelessWidget {
 
 class _WordPuzzleState extends State<WordPuzzle> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  Module module;
+  int index;
   int _currentIndex = 0;
   bool _puzzleChecked = false;
-  final List<Puzzle> _puzzles = [
-    Puzzle(
-      sourceText: 'I drink',
-      wordChoices: [
-        Word('ጠጣሁ'),
-        Word('እኔ'),
-        Word('እሱ'),
-        Word('በላ'),
-        Word('ጠጣሁ'),
-        Word('እኔ'),
-        Word('እሱ'),
-        Word('በላ')
-      ],
-      correctSequence: [Word('እኔ'), Word('ጠጣሁ')],
-    ),
-    Puzzle(
-      sourceText: 'He ate',
-      wordChoices: [
-        Word('ጠጣሁ'),
-        Word('እኔ'),
-        Word('እሱ'),
-        Word('በላ'),
-        Word('ጠጣሁ'),
-        Word('እኔ'),
-        Word('እሱ'),
-        Word('በላ')
-      ],
-      correctSequence: [Word('እሱ'), Word('በላ')],
-    ),
-  ];
-  List<Word> _selectedWords = [];
+  String checkText = 'Check';
+  bool isCorrect = false;
+  Question2 _puzzle;
+  double progress;
+  List<Word2> _selectedWords = [];
+  @override
+  void initState() {
+    // TODO: implement initState
+    module = widget.module;
+    index = widget.index;
+    progress = 0.6666 + ((index)/(module.chooseImages.length))/3;
+    super.initState();
+    _puzzle = module.wordPuzzels[index];
 
-  void _selectWord(Word word) {
+  }
+  void _selectWord(Word2 word) {
     setState(() {
       _selectedWords.add(word);
       word.selected = true;
     });
   }
 
-  void _removeSelection(Word word) {
+  void _removeSelection(Word2 word) {
     setState(() {
       word.selected = false;
       _selectedWords.remove(word);
     });
   }
-
+  void playSound(String fileName){
+    final player  = AudioCache();
+    player.play(fileName);
+  }
   void _checkAnswer() {
-    if (listEquals(_puzzles[_currentIndex].correctSequence, _selectedWords)) {
-      _scaffoldKey.currentState.showSnackBar(
-        SnackBar(
-          behavior: SnackBarBehavior.floating,
-          duration: Duration(seconds: 2),
-          content: Text(
-            'Correct!',
-            style: TextStyle(
-              color: Colors.black38,
-              fontSize: 20.0,
-            ),
-          ),
-          backgroundColor: Colors.greenAccent,
-        ),
-      );
+    if (listEquals(_puzzle.correctSequence, _selectedWords)) {
+      isCorrect = true;
+
     } else {
-      _scaffoldKey.currentState.showSnackBar(
-        SnackBar(
-          behavior: SnackBarBehavior.floating,
-          duration: Duration(seconds: 2),
-          content: Text(
-            'Incorrect!',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20.0,
-            ),
-          ),
-          backgroundColor: Colors.redAccent,
-        ),
-      );
+      isCorrect = false;
+
     }
     setState(() {
       _puzzleChecked = true;
@@ -138,13 +87,10 @@ class _WordPuzzleState extends State<WordPuzzle> {
   }
 
   void _gotoNextPuzzle() {
-    if (_puzzles.length - 1 > _currentIndex) {
-      setState(() {
-        _puzzleChecked = false;
-        _currentIndex++;
-        _selectedWords = [];
-      });
-    } else {
+    int nextIndex;
+    if(module.wordPuzzels.length==this.index+1){
+      nextIndex = 0;
+      progress = 1;
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
           behavior: SnackBarBehavior.floating,
@@ -160,21 +106,43 @@ class _WordPuzzleState extends State<WordPuzzle> {
         ),
       );
     }
+    else{
+      nextIndex = this.index + 1;
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => WordPuzzle(
+          module: this.module,
+          index: nextIndex,
+        )),
+      );
+    }
   }
 
   Widget _renderSource() {
     return Column(
       children: <Widget>[
-        Text('Write this in Amharic'),
+        Text(
+          'Write this in Tigrigna',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 24,
+          ),
+        ),
         SizedBox(
           height: 10.0,
         ),
         Container(
           padding: EdgeInsets.all(20.0),
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
+            color: Colors.lightBlueAccent,
+            borderRadius: BorderRadius.circular(10),
           ),
-          child: Text(_puzzles[_currentIndex].sourceText),
+          child: Text(
+            _puzzle.sourceText,
+         style: TextStyle(
+           color: Colors.white,
+         ),
+          ),
         ),
       ],
     );
@@ -198,7 +166,13 @@ class _WordPuzzleState extends State<WordPuzzle> {
                   _removeSelection(word);
                 },
                 child: Chip(
-                  label: Text(word.text),
+                  backgroundColor: Colors.green,
+                  label: Text(
+                      word.text,
+                    style: TextStyle(
+                      color: Colors.white
+                    ),
+                  ),
                 ),
               ),
             )
@@ -211,7 +185,7 @@ class _WordPuzzleState extends State<WordPuzzle> {
     return Wrap(
       alignment: WrapAlignment.center,
       spacing: 20.0,
-      children: _puzzles[_currentIndex]
+      children: _puzzle
           .wordChoices
           .map(
             (choice) => GestureDetector(
@@ -229,24 +203,116 @@ class _WordPuzzleState extends State<WordPuzzle> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          _renderSource(),
-          _renderChoice(),
-          _renderSelectionList()
-        ],
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                GestureDetector(
+                  onTap: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LevelScreen()),
+                    );
+                  },
+                  child: Icon(
+                    Icons.close,
+                    size: 30,
+                    color: Colors.grey,
+                  ),
+                ),
+                Center(
+                  child: Container(
+                    width: 200,
+                    height: 20,
+                    child: LinearProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                        backgroundColor: Color(0xFFE6E6E6),
+                        value: progress
+                    ),
+                  ),
+                ),
+                Icon(
+                  Icons.favorite,
+                  size: 30,
+                  color: Colors.redAccent,
+                ),
+
+              ],
+            ),
+            _renderSource(),
+            _renderChoice(),
+            _renderSelectionList(),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                GestureDetector(
+                  onTap: (){
+                    _checkAnswer();
+                    setState(() {
+                      if(checkText=='Check'){
+                        setState(() {
+                          progress = 0.666 + ((index+1)/(module.chooseImages.length))/3;
+                        });
+                        String t1,t2='';
+                        Color background;
+                        if(isCorrect){
+                          playSound('audios/correct.wav');
+                          t1 = 'Correct';
+                          t2 = '';
+                          background = Colors.greenAccent;
+                        }else{
+                          playSound('audios/incorrect.wav');
+                          t1 = 'Incorrect';
+                          background = Colors.redAccent;
+                        }
+                        checkText = 'Continue';
+                        _scaffoldKey.currentState.showSnackBar(
+                          SnackBar(
+                            behavior: SnackBarBehavior.floating,
+                            duration: Duration(seconds: 2),
+                            content: Text(
+                              t1,
+                              style: TextStyle(
+                                color: Colors.black38,
+                                fontSize: 20.0,
+                              ),
+                            ),
+                            backgroundColor: background,
+                          ),
+                        );
+                      }else{
+                        //nextQuestion();
+                        _gotoNextPuzzle();
+                      }
+
+                    });
+
+                  },
+                  child: Card(
+                    child: Container(
+                      width: 300,
+                      margin: EdgeInsets.all(10),
+                      child: Text(
+                        checkText,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    color: Colors.green,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if (_puzzleChecked) {
-            _gotoNextPuzzle();
-          } else {
-            _checkAnswer();
-          }
-        },
-        child: _puzzleChecked ? Icon(Icons.arrow_forward) : Icon(Icons.check),
-      ),
+
     );
   }
 }

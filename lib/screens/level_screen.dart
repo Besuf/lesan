@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lesan/screens/chooseImage_screen.dart';
+import 'package:lesan/screens/word_puzzle_screen.dart';
+import 'package:lesan/models/questionTypes.dart';
+import 'dart:convert';
+import 'dart:async' show Future;
+import 'package:flutter/services.dart' show rootBundle;
 
 class LevelScreen extends StatelessWidget {
   static const routeName = 'level_screen';
@@ -16,6 +21,21 @@ class Level extends StatefulWidget {
 }
 
 class _LevelState extends State<Level> {
+
+  Module basics1;
+  Future<String> basics1String;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+//    Map userMap = jsonDecode(jsonString);
+//    string user = User.fromJson(userMap);
+     basics1String =  loadAsset();
+  }
+  Future<String> loadAsset() async {
+    String level1Strings = await rootBundle.loadString('assets/sample.json');
+    return level1Strings;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,36 +56,53 @@ class _LevelState extends State<Level> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              GestureDetector(
-                onTap: (){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ChooseImageScreen()),
-                  );
-                },
-                child: Column(
-                    children: <Widget>[
-                        Container(
-                          height: 80,
-                          width: 80,
-                          margin: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage('assets/images/egg.png'),
-                              fit: BoxFit.contain
-                          )
-                          )
+              FutureBuilder(
+                future: this.basics1String,
+                builder: (context, AsyncSnapshot<String> snapshot) {
+                  if(snapshot.hasData){
+                    Map moduleMap = jsonDecode(snapshot.data);
+                    this.basics1 = Module.fromJson(moduleMap);
+                    return GestureDetector(
+                      onTap: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ChooseImageScreen(
+                              module: this.basics1,
+                              index: 0,
+                          )),
+                        );
+                      },
+                      child: Column(
+                          children: <Widget>[
+                            Container(
+                                height: 80,
+                                width: 80,
+                                margin: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                        image: AssetImage('assets/images/egg.png'),
+                                        fit: BoxFit.contain
+                                    )
+                                )
+                            ),
+                            Text(
+                              'Basics 1',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ]
                       ),
-                      Text(
-                        'Basics 1',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                        ),
-                  ),
-            ]
-          ),
+                    );
+                  }
+                  else {
+                    return Text('Loading');
+                  }
+                }
               ),
+
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[

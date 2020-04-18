@@ -1,21 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:lesan/screens/level_screen.dart';
+import 'package:lesan/screens/writeSentence_screen.dart';
 import 'package:audioplayers/audio_cache.dart';
+import 'package:lesan/models/questionTypes.dart';
+import 'package:flutter_rounded_progress_bar/flutter_icon_rounded_progress_bar.dart';
+import 'package:flutter_rounded_progress_bar/flutter_rounded_progress_bar.dart';
+import 'package:flutter_rounded_progress_bar/rounded_progress_bar_style.dart';
 
 class ChooseImageScreen extends StatelessWidget {
   static const routeName = 'chooseImage_screen';
+  final Module module;
+  final int index;
+  ChooseImageScreen({Key key, @required this.module, this.index}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Choose();
+    return Choose(
+      module: module,
+      index: index,
+    );
   }
 }
 class Choose extends StatefulWidget {
+  final Module module;
+  final int index;
+  Choose({Key key, @required this.module, this.index}): super(key:key);
   @override
   _ChooseState createState() => _ChooseState();
 }
 
 class _ChooseState extends State<Choose> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  Module module;
+  int index;
+  double progress;
   Color card1Background;
   Color card1BorderColor;
   Color card2Background;
@@ -29,7 +47,7 @@ class _ChooseState extends State<Choose> {
   String checkText;
   Color resultBackground;
   Color resultTextColor;
-  Question currentQuestion;
+  Question1 currentQuestion;
   String currentAnswer;
   String currentResult;
   String currentResultText;
@@ -40,8 +58,12 @@ class _ChooseState extends State<Choose> {
   @override
   void initState() {
     // TODO: implement initState
+    module = widget.module;
+    index = widget.index;
+    progress = ((index)/(module.chooseImages.length))/3;
     super.initState();
     initQuestion();
+
 
   }
   void initUI(){
@@ -65,17 +87,34 @@ class _ChooseState extends State<Choose> {
     isAnswered = false;
   }
   void initQuestion(){
-    Question1Card firstOption = Question1Card(optionName: 'ሰውዬ', imgURL: 'assets/images/man.png', soundURL: 'audios/man.m4a');
-    Question1Card secondOption = Question1Card(optionName: 'ሴቲዮ', imgURL: 'assets/images/man.png', soundURL: 'audios/woman.m4a');
-    Question1Card thirdOption = Question1Card(optionName: 'ድመት', imgURL: 'assets/images/man.png', soundURL: 'audios/cat.m4a');
-    Question1Card fourthOption = Question1Card(optionName: 'ውሻ', imgURL: 'assets/images/man.png', soundURL: 'audios/cat.m4a');
-    Question firstQuestion = Question(
-        question: 'Which one of the following is "THE MAN"?',
+    print('option1'+module.chooseImages[this.index].option1.imgURL);
+    Question1Card firstOption = Question1Card(
+        optionName: module.chooseImages[this.index].option1.optionName,
+        imgURL:  module.chooseImages[this.index].option1.imgURL,
+        soundURL:  module.chooseImages[this.index].option1.soundURL
+    );
+    Question1Card secondOption = Question1Card(
+        optionName: module.chooseImages[this.index].option2.optionName,
+        imgURL:  module.chooseImages[this.index].option2.imgURL,
+        soundURL:  module.chooseImages[this.index].option2.soundURL
+    );
+    Question1Card thirdOption = Question1Card(
+        optionName: module.chooseImages[this.index].option3.optionName,
+        imgURL:  module.chooseImages[this.index].option3.imgURL,
+        soundURL:  module.chooseImages[this.index].option3.soundURL
+    );
+    Question1Card fourthOption = Question1Card(
+        optionName: module.chooseImages[this.index].option4.optionName,
+        imgURL:  module.chooseImages[this.index].option4.imgURL,
+        soundURL:  module.chooseImages[this.index].option4.soundURL
+    );
+    Question1 firstQuestion = Question1(
+        question: module.chooseImages[this.index].question,
         option1: firstOption,
         option2: secondOption,
         option3: thirdOption,
         option4: fourthOption,
-        answer: 'ሰውዬ'
+        answer: module.chooseImages[this.index].answer
     );
     setState(() {
       initUI();
@@ -84,24 +123,28 @@ class _ChooseState extends State<Choose> {
     });
   }
   void nextQuestion(){
-    Question1Card firstOption = Question1Card(optionName: 'ወተት', imgURL: 'assets/images/man.png', soundURL: 'audios/milk.m4a');
-    Question1Card secondOption = Question1Card(optionName: 'ውሀ', imgURL: 'assets/images/man.png', soundURL: 'audios/water.m4a');
-    Question1Card thirdOption = Question1Card(optionName: 'ዳቦ', imgURL: 'assets/images/man.png', soundURL: 'audios/bread.m4a');
-    Question1Card fourthOption = Question1Card(optionName: 'እንጀራ', imgURL: 'assets/images/man.png', soundURL: 'audios/bread.m4a');
-    Question question = Question(
-        question: 'Which one of the following is "Milk"?',
-        option1: firstOption,
-        option2: secondOption,
-        option3: thirdOption,
-        option4: fourthOption,
-        answer: 'ወተት'
-    );
-    setState(() {
-      initUI();
-      currentQuestion = question;
-      currentAnswer = '';
-      questionIndex+=1;
-    });
+    int nextIndex;
+    if(module.chooseImages.length==this.index+1){
+      nextIndex = 0;
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => WriteSentenceScreen(
+          module: this.module,
+          index: nextIndex,
+        )),
+      );
+    }
+    else{
+      nextIndex = this.index + 1;
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ChooseImageScreen(
+          module: this.module,
+          index: nextIndex,
+        )),
+      );
+    }
+
   }
   void playSound(String fileName){
     final player  = AudioCache();
@@ -140,9 +183,9 @@ class _ChooseState extends State<Choose> {
                       width: 200,
                       height: 20,
                       child: LinearProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
-                        backgroundColor: Color(0xFFE6E6E6),
-                        value: (questionIndex+1)/2
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                          backgroundColor: Color(0xFFE6E6E6),
+                          value: progress
                       ),
                     ),
                   ),
@@ -154,6 +197,7 @@ class _ChooseState extends State<Choose> {
 
                 ],
               ),
+
               Container(
                   margin: EdgeInsets.fromLTRB(15, 15, 15, 10),
                   child: Text(
@@ -412,6 +456,10 @@ class _ChooseState extends State<Choose> {
                         });
                       }
                       else if(!isAnswered && currentAnswer == currentQuestion.answer){
+                        playSound('audios/correct.wav');
+                        setState(() {
+                          progress = ((index+1)/(module.chooseImages.length))/3;
+                        });
                         _scaffoldKey.currentState.showSnackBar(
                           SnackBar(
                             behavior: SnackBarBehavior.floating,
@@ -436,6 +484,10 @@ class _ChooseState extends State<Choose> {
 
                       }
                       else if(!isAnswered){
+                        playSound('audios/incorrect.wav');
+                        setState(() {
+                          progress = ((index+1)/(module.chooseImages.length))/3;
+                        });
                         _scaffoldKey.currentState.showSnackBar(
                           SnackBar(
                             behavior: SnackBarBehavior.floating,
@@ -490,20 +542,3 @@ class _ChooseState extends State<Choose> {
 
 
 
-class Question{
-  String question;
-  Question1Card option1;
-  Question1Card option2;
-  Question1Card option3;
-  Question1Card option4;
-  String answer;
-  Question({this.question, this.option1, this.option2, this.option3, this.option4, this.answer});
-
-}
-
-class Question1Card{
-  String optionName;
-  String imgURL;
-  String soundURL;
-  Question1Card({this.optionName, this.imgURL, this.soundURL});
-}

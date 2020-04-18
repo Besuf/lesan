@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
               color: Colors.black87),
         ),
       ),
-      initialRoute: WriteSentenceScreen.routeName,
+      initialRoute: LevelScreen.routeName,
       routes: {
         HomeScreen.routeName: (_) => HomeScreen(),
         LanguageSelect.routeName: (_) => LanguageSelect(),

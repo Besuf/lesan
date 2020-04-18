@@ -1,0 +1,229 @@
+{
+  "moduleName": "oromiffa basics",
+  "chooseImages": [
+    {
+      "question": "which one of the following \"THE WOMAN\"?",
+      "option1": {
+        "optionName": "እታ ሰበይቲ",
+        "soundURL": "audios/woman.wav",
+        "imgURL": "assets/images/woman.png"
+      },
+      "option2": {
+        "optionName": "ንእሽተይ ወዲ",
+        "soundURL": "audios/boy.wav",
+        "imgURL": "assets/images/boy.png"
+      },
+      "option3": {
+        "optionName": "ንእሽተይ ጉዐል",
+        "soundURL": "audios/girl.wav",
+        "imgURL": "assets/images/girl.png"
+      },
+      "option4": {
+        "optionName": "እቲ ሰባይ",
+        "soundURL": "audios/man.wav",
+        "imgURL": "assets/images/man.png"
+      },
+      "answer": "እታ ሰበይቲ"
+    },
+    {
+      "question": "which one of the following \"THE MAN\"?",
+      "option1": {
+        "optionName": "ንእሽተይ ወዲ",
+        "soundURL": "audios/boy.wav",
+        "imgURL": "assets/images/boy.png"
+      },
+      "option2": {
+        "optionName": "እታ ሰበይቲ",
+        "soundURL": "audios/woman.wav",
+        "imgURL": "assets/images/woman.png"
+      },
+      "option3": {
+        "optionName": "እቲ ሰባይ",
+        "soundURL": "audios/man.wav",
+        "imgURL": "assets/images/man.png"
+      },
+      "option4": {
+        "optionName": "ንእሽተይ ጉዐል",
+        "soundURL": "audios/girl.wav",
+        "imgURL": "assets/images/girl.png"
+      },
+      "answer": "እቲ ሰባይ"
+    }
+  ],
+  "writeSentences": [
+    {
+      "questionAudioURL": "audios/8.wav",
+      "options": [
+        {
+          "text": "እዬ",
+          "isSelected": false
+        },
+        {
+          "text": "ሰባይ",
+          "isSelected": false
+        },
+        {
+          "text": "አነ",
+          "isSelected": false
+        }
+      ],
+      "correctAnswer": [
+        {
+          "text": "አነ",
+          "isSelected": false
+        },
+        {
+          "text": "ሰባይ",
+          "isSelected": false
+        },
+        {
+          "text": "እዬ",
+          "isSelected": false
+        }
+      ]
+    },
+    {
+      "questionAudioURL": "audios/5.wav",
+      "options": [
+        {
+          "text": "ትመትር",
+          "isSelected": false
+        },
+        {
+          "text": "እታ",
+          "isSelected": false
+        },
+        {
+          "text": "ሽንጉርቲ",
+          "isSelected": false
+        },
+        {
+          "text": "አላ",
+          "isSelected": false
+        },
+        {
+          "text": "ሰበይቲ",
+          "isSelected": false
+        }
+      ],
+      "correctAnswer":[
+        {
+          "text": "እታ",
+          "isSelected": false
+        },
+        {
+          "text": "ሰበይቲ",
+          "isSelected": false
+        },
+        {
+          "text": "ሽንጉርቲ",
+          "isSelected": false
+        },
+        {
+          "text": "ትመትር",
+          "isSelected": false
+        },
+        {
+          "text": "አላ",
+          "isSelected": false
+        }
+      ]
+    }
+  ],
+  "wordPuzzels": [
+    {
+      "sourceText": "I am a man",
+      "wordChoices": [
+        {
+          "text": "ሰባይ",
+          "selected": false
+        },
+        {
+          "text": "አነ",
+          "selected": false
+        },
+        {
+          "text": "እዬ",
+          "selected": false
+        },
+        {
+          "text": "ሰበይቲ",
+          "selected": false
+        },
+        {
+          "text": "ይሰቲ",
+          "selected": false
+        }
+      ],
+      "correctSequence": [
+        {
+          "text": "አነ",
+          "selected": false
+        },
+        {
+          "text": "ሰባይ",
+          "selected": false
+        },
+        {
+          "text": "እዬ",
+          "selected": false
+        }
+      ]
+    },
+    {
+      "sourceText": "She is chopping onions",
+      "wordChoices": [
+        {
+          "text": "ሽንጉርቲ",
+          "selected": false
+        },
+        {
+          "text": "አላ",
+          "selected": false
+        },
+        {
+          "text": "ሰበይቲ",
+          "selected": false
+        },
+        {
+          "text": "ፃባ",
+          "selected": false
+        },
+        {
+          "text": "እታ",
+          "selected": false
+        },
+        {
+          "text": "ትመትር",
+          "selected": false
+        },
+        {
+          "text": "ፃባ",
+          "selected": false
+        }
+      ],
+      "correctSequence": [
+        {
+          "text": "እታ",
+          "selected": false
+        },
+        {
+          "text": "ሰበይቲ",
+          "selected": false
+        },
+        {
+          "text": "ሽንጉርቲ",
+          "selected": false
+        },
+        {
+          "text": "ትመትር",
+          "selected": false
+        },
+        {
+          "text": "አላ",
+          "selected": false
+        }
+      ]
+    }
+  ]
+}

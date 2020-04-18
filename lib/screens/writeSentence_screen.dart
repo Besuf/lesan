@@ -1,42 +1,83 @@
 import 'package:flutter/material.dart';
 
 import 'package:lesan/screens/level_screen.dart';
+import 'package:lesan/screens/word_puzzle_screen.dart';
 import 'package:audioplayers/audio_cache.dart';
+import 'package:lesan/models/questionTypes.dart';
 
 class WriteSentenceScreen extends StatelessWidget {
   static final String routeName = 'writeSentence_screen';
+  final Module module;
+  final int index;
+  WriteSentenceScreen({Key key, @required this.module, this.index}): super(key: key);
   @override
   Widget build(BuildContext context) {
-    return WriteSentence();
+    return WriteSentence(
+      module: module,
+      index: index
+    );
   }
 }
 
 class WriteSentence extends StatefulWidget {
+  final Module module;
+  final int index;
+  WriteSentence({Key key, @required this.module, this.index}): super(key:key);
   @override
   _WriteSentenceState createState() => _WriteSentenceState();
 }
 
 class _WriteSentenceState extends State<WriteSentence> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  Question currentQuestion;
-  List<Word> currentAnswer = List<Word>();
+  Module module;
+  int index;
+  double progress;
+  Question3 currentQuestion;
+  List<Word3> currentAnswer = List<Word3>();
   String checkText = 'Check';
 
   @override
   void initState() {
     // TODO: implement initState
+    module = widget.module;
+    index = widget.index;
+    progress = 0.33 + ((index)/(module.chooseImages.length))/3;
     super.initState();
     initQuestion();
   }
   void initQuestion(){
-      List<Word> options = [Word('beso'), Word('bela'), Word('Abebe'), Word('betam'), Word('des'), Word('bilot')];
-      List<Word> correctAnswer = [Word('Abebe'),Word('betam'), Word('des'), Word('bilot'), Word('beso'), Word('bela')];
-      Question q1 = Question(
-        questionAudioURL: 'audios/bread.m4a',
+      List<Word3> options = module.writeSentences[this.index].options;
+      List<Word3> correctAnswer = module.writeSentences[this.index].correctAnswer;
+      Question3 q1 = Question3(
+        questionAudioURL: module.writeSentences[this.index].questionAudioURL,
         options: options,
         correctAnswer: correctAnswer,
       );
       currentQuestion = q1;
+  }
+  void nextQuestion(){
+    int nextIndex;
+    if(module.chooseImages.length==this.index+1){
+      nextIndex = 0;
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => WordPuzzle(
+          module: this.module,
+          index: nextIndex,
+        )),
+      );
+    }
+    else{
+      nextIndex = this.index + 1;
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => WriteSentenceScreen(
+          module: this.module,
+          index: nextIndex,
+        )),
+      );
+    }
+
   }
   void playSound(String fileName){
     final player  = AudioCache();
@@ -44,6 +85,9 @@ class _WriteSentenceState extends State<WriteSentence> {
   }
   bool isCorrect(){
     bool result = true;
+    if(currentAnswer.length!=currentQuestion.options.length){
+      result = false;
+    }
     for(int i=0; i<currentAnswer.length;i++){
       if(currentAnswer[i].text != currentQuestion.correctAnswer[i].text){
         result = false;
@@ -66,7 +110,7 @@ class _WriteSentenceState extends State<WriteSentence> {
                      });
                  },
                  child: Chip(
-                   label: currentQuestion.options[i].isSelected ? Text('') : Text(currentQuestion.options[i].text),
+                   label: currentQuestion.options[i].isSelected ? Text('') : Text(currentQuestion.options[i].text, style: TextStyle(color: Colors.white),),
                    backgroundColor: currentQuestion.options[i].isSelected ? Colors.white24 : Colors.green,
                    elevation:  currentQuestion.options[i].isSelected ? 0 : 10 ,
               ),
@@ -95,7 +139,7 @@ class _WriteSentenceState extends State<WriteSentence> {
                       });
                 },
                 child: Chip(
-                  label: currentQuestion.options[i].isSelected ? Text('') : Text(currentQuestion.options[i].text),
+                  label: currentQuestion.options[i].isSelected ? Text('') : Text(currentQuestion.options[i].text,style: TextStyle(color: Colors.white),),
                   backgroundColor: currentQuestion.options[i].isSelected ? Colors.white24 : Colors.green,
                   elevation:  currentQuestion.options[i].isSelected ? 0 : 10 ,
                 ),
@@ -113,7 +157,7 @@ class _WriteSentenceState extends State<WriteSentence> {
                     });
                 },
                 child: Chip(
-                  label: currentQuestion.options[i].isSelected ? Text('') : Text(currentQuestion.options[i].text),
+                  label: currentQuestion.options[i].isSelected ? Text('') : Text(currentQuestion.options[i].text,style: TextStyle(color: Colors.white),),
                   backgroundColor: currentQuestion.options[i].isSelected ? Colors.white24 : Colors.green,
                   elevation:  currentQuestion.options[i].isSelected ? 0 : 10 ,
                 ),
@@ -155,7 +199,7 @@ class _WriteSentenceState extends State<WriteSentence> {
                     });
                 },
                 child: Chip(
-                  label: currentQuestion.options[i].isSelected ? Text('') : Text(currentQuestion.options[i].text),
+                  label: currentQuestion.options[i].isSelected ? Text('') : Text(currentQuestion.options[i].text, style: TextStyle(color: Colors.white),),
                   backgroundColor: currentQuestion.options[i].isSelected ? Colors.white24 : Colors.green,
                   elevation:  currentQuestion.options[i].isSelected ? 0 : 10 ,
                 ),
@@ -173,7 +217,7 @@ class _WriteSentenceState extends State<WriteSentence> {
                     });
                 },
                 child: Chip(
-                  label: currentQuestion.options[i].isSelected ? Text('') : Text(currentQuestion.options[i].text),
+                  label: currentQuestion.options[i].isSelected ? Text('') : Text(currentQuestion.options[i].text, style: TextStyle(color: Colors.white),),
                   backgroundColor: currentQuestion.options[i].isSelected ? Colors.white24 : Colors.green,
                   elevation:  currentQuestion.options[i].isSelected ? 0 : 10 ,
                 ),
@@ -191,7 +235,7 @@ class _WriteSentenceState extends State<WriteSentence> {
                     });
                 },
                 child: Chip(
-                  label: currentQuestion.options[i].isSelected ? Text('') : Text(currentQuestion.options[i].text),
+                  label: currentQuestion.options[i].isSelected ? Text('') : Text(currentQuestion.options[i].text, style: TextStyle(color: Colors.white),),
                   backgroundColor: currentQuestion.options[i].isSelected ? Colors.white24 : Colors.green,
                   elevation:  currentQuestion.options[i].isSelected ? 0 : 10 ,
                 ),
@@ -245,7 +289,7 @@ class _WriteSentenceState extends State<WriteSentence> {
               });
             },
             child: Chip(
-              label: Text(currentAnswer[i].text),
+              label: Text(currentAnswer[i].text, style: TextStyle(color: Colors.white),),
               backgroundColor: Colors.green,
             ),
       ));
@@ -277,7 +321,12 @@ class _WriteSentenceState extends State<WriteSentence> {
               });
             },
             child: Chip(
-              label: Text(currentAnswer[i].text),
+              label: Text(
+                currentAnswer[i].text,
+                style: TextStyle(
+                  color: Colors.white
+                ),
+              ),
               backgroundColor: Colors.green,
             ),
           ));
@@ -324,7 +373,7 @@ class _WriteSentenceState extends State<WriteSentence> {
                         child: LinearProgressIndicator(
                             valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
                             backgroundColor: Color(0xFFE6E6E6),
-                            value: (1)/2
+                            value: progress
                         ),
                       ),
                     ),
@@ -416,13 +465,18 @@ class _WriteSentenceState extends State<WriteSentence> {
                         onTap: (){
                           setState(() {
                             if(checkText=='Check'){
+                              setState(() {
+                                progress = 0.33+((index+1)/(module.chooseImages.length))/3;
+                              });
                               String t1,t2='';
                               Color background;
                               if(isCorrect()){
+                                playSound('audios/correct.wav');
                                 t1 = 'Correct';
                                 t2 = '';
                                 background = Colors.greenAccent;
                               }else{
+                                playSound('audios/incorrect.wav');
                                 t1 = 'Incorrect';
                                 for(int i=0; i<currentQuestion.correctAnswer.length; i++){
                                   t2 += currentQuestion.correctAnswer[i].text;
@@ -444,6 +498,8 @@ class _WriteSentenceState extends State<WriteSentence> {
                                   backgroundColor: background,
                                 ),
                               );
+                            }else{
+                              nextQuestion();
                             }
 
                           });
@@ -477,18 +533,5 @@ class _WriteSentenceState extends State<WriteSentence> {
 
     );
   }
-}
-class Word{
-  String text;
-  bool isSelected = false;
-  Word(this.text);
-}
-
-class Question{
-  String questionAudioURL;
-  List<Word> options;
-  List<Word> correctAnswer;
-  Question({this.questionAudioURL, this.options, this.correctAnswer});
-
 }
 
