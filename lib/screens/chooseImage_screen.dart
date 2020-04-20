@@ -3,9 +3,8 @@ import 'package:lesan/screens/level_screen.dart';
 import 'package:lesan/screens/writeSentence_screen.dart';
 import 'package:audioplayers/audio_cache.dart';
 import 'package:lesan/models/questionTypes.dart';
-import 'package:flutter_rounded_progress_bar/flutter_icon_rounded_progress_bar.dart';
-import 'package:flutter_rounded_progress_bar/flutter_rounded_progress_bar.dart';
-import 'package:flutter_rounded_progress_bar/rounded_progress_bar_style.dart';
+
+enum AnswerState { Correct, Wrong, NotAnswered }
 
 class ChooseImageScreen extends StatelessWidget {
   static const routeName = 'chooseImage_screen';
@@ -52,8 +51,8 @@ class _ChooseState extends State<Choose> {
   String currentResult;
   String currentResultText;
   bool isAnswered;
-  int questionIndex=0;
-  int totalQuestion=2;
+  AnswerState _answerState;
+  String _textContent = '';
 
   @override
   void initState() {
@@ -61,6 +60,7 @@ class _ChooseState extends State<Choose> {
     module = widget.module;
     index = widget.index;
     progress = ((index)/(module.chooseImages.length))/3;
+    _answerState = AnswerState.NotAnswered;
     super.initState();
     initQuestion();
 
@@ -80,8 +80,6 @@ class _ChooseState extends State<Choose> {
     resultBackground = Colors.white24;
     resultTextColor = Colors.white;
     checkText = 'CHECK';
-    currentQuestion;
-    currentAnswer;
     currentResult='';
     currentResultText='';
     isAnswered = false;
@@ -146,6 +144,26 @@ class _ChooseState extends State<Choose> {
     }
 
   }
+  void correctAnswer() {
+    setState(() {
+      _answerState = AnswerState.Correct;
+      _textContent = 'Correct';
+    });
+  }
+
+  void wrongAnswer(String correctAnswer) {
+    setState(() {
+      _answerState = AnswerState.Wrong;
+      _textContent = 'Incorrect: answer is \"$correctAnswer\"';
+    });
+  }
+
+  void reset() {
+    setState(() {
+      _answerState = AnswerState.NotAnswered;
+      _textContent = '';
+    });
+  }
   void playSound(String fileName){
     final player  = AudioCache();
     player.play(fileName);
@@ -157,7 +175,9 @@ class _ChooseState extends State<Choose> {
       body: SafeArea(
         child: SizedBox.expand(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: _answerState==AnswerState.NotAnswered?
+                MainAxisAlignment.spaceEvenly:
+                MainAxisAlignment.end,
             children: <Widget>[
               Container(
                 height: 10,
@@ -224,7 +244,7 @@ class _ChooseState extends State<Choose> {
                         card2BorderColor = Colors.grey;
                         card2Background = Colors.white;
                         checkButtonTextColor = Colors.white;
-                        checkButtonBackground = Colors.green;
+                        checkButtonBackground = Colors.lightGreen;
                         currentAnswer = currentQuestion.option1.optionName;
                       });
                       playSound(currentQuestion.option1.soundURL);
@@ -280,7 +300,7 @@ class _ChooseState extends State<Choose> {
                         card4BorderColor = Colors.grey;
                         card4Background = Colors.white;
                         checkButtonTextColor = Colors.white;
-                        checkButtonBackground = Colors.green;
+                        checkButtonBackground = Colors.lightGreen;
                         currentAnswer = currentQuestion.option2.optionName;
                       });
                       playSound(currentQuestion.option2.soundURL);
@@ -341,7 +361,7 @@ class _ChooseState extends State<Choose> {
                         card4BorderColor = Colors.grey;
                         card4Background = Colors.white;
                         checkButtonTextColor = Colors.white;
-                        checkButtonBackground = Colors.green;
+                        checkButtonBackground = Colors.lightGreen;
                         currentAnswer = currentQuestion.option3.optionName;
                       });
                       playSound(currentQuestion.option3.soundURL);
@@ -397,7 +417,7 @@ class _ChooseState extends State<Choose> {
                         card2BorderColor = Colors.grey;
                         card2Background = Colors.white;
                         checkButtonTextColor = Colors.white;
-                        checkButtonBackground = Colors.green;
+                        checkButtonBackground = Colors.lightGreen;
                         currentAnswer = currentQuestion.option2.optionName;
                       });
                       playSound(currentQuestion.option4.soundURL);
@@ -443,94 +463,105 @@ class _ChooseState extends State<Choose> {
                   ),
                 ],
               ),//option 3&4
-              Center(
-                child: Card(
-                  color: checkButtonBackground,
-                  child: InkWell(
-                    splashColor: Colors.green.withAlpha(30),
-                    onTap: (){
-                      //do something
-                      if(isAnswered){
-                        setState(() {
-                          nextQuestion();
-                        });
-                      }
-                      else if(!isAnswered && currentAnswer == currentQuestion.answer){
-                        playSound('audios/correct.wav');
-                        setState(() {
-                          progress = ((index+1)/(module.chooseImages.length))/3;
-                        });
-                        _scaffoldKey.currentState.showSnackBar(
-                          SnackBar(
-                            behavior: SnackBarBehavior.floating,
-                            duration: Duration(seconds: 2),
-                            content: Text(
-                              'Correct!',
-                              style: TextStyle(
-                                color: Colors.black38,
-                                fontSize: 20.0,
-                              ),
-                            ),
-                            backgroundColor: Colors.greenAccent,
-                          ),
-                        );
-                        setState(() {
-                          isAnswered = true;
-                          resultBackground = Color(0xff9de6ff);
-                          resultTextColor = Color(0xff1e8bb7);
-                          currentResult = 'CORRECT';
-                          checkText = 'NEXT';
-                        });
-
-                      }
-                      else if(!isAnswered){
-                        playSound('audios/incorrect.wav');
-                        setState(() {
-                          progress = ((index+1)/(module.chooseImages.length))/3;
-                        });
-                        _scaffoldKey.currentState.showSnackBar(
-                          SnackBar(
-                            behavior: SnackBarBehavior.floating,
-                            duration: Duration(seconds: 2),
-                            content: Text(
-                              'Incorrect! correct answer is \"'+ currentQuestion.answer+'\"',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20.0,
-                              ),
-                            ),
-                            backgroundColor: Colors.redAccent,
-                          ),
-                        );
-                        setState(() {
-                          isAnswered = true;
-                          resultBackground = Color(0xffffb0b0);
-                          resultTextColor = Color(0xff9d0000);
-                          currentResult = 'WRONG';
-                          currentResultText = 'correct answer is \"'+ currentQuestion.answer+'\"';
-                          checkText = 'NEXT';
-                        });
-
-                      }
-
-                    },
+              Stack(
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment.bottomCenter,
                     child: Container(
-                      margin: EdgeInsets.all(10),
-                      width: 300,
-                      height: 30,
-                      child: Text(
-                          checkText,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: checkButtonTextColor,
-                          fontSize: 24,
-                          fontWeight: FontWeight.w700
-                        ),
+                      child: Stack(
+                        alignment: Alignment.bottomCenter,
+                        children: <Widget>[
+                          AnimatedCrossFade(
+                            firstChild: Container(),
+                            secondChild: Container(
+                              height: 130,
+                              width: double.infinity,
+                              color: _answerState == AnswerState.Correct?
+                                  Colors.lightGreen[300]:
+                                  Colors.red[200],
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 8.0, horizontal: 10.0),
+                                child: Text(
+                                  _textContent,
+                                  style: TextStyle(
+                                    color: _answerState==AnswerState.Correct?
+                                        Colors.lightGreen[600]:
+                                        Colors.red,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w900
+                                  ),
+                                ),
+                              ),
+                            ),
+                            duration: Duration(milliseconds: 200),
+                            crossFadeState: _answerState == AnswerState.NotAnswered
+                                ? CrossFadeState.showFirst
+                                : CrossFadeState.showSecond,
+                            secondCurve: Curves.easeOutBack.flipped,
+                            firstCurve: Curves.easeOutBack.flipped,
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(bottom: 20),
+                            color: checkButtonBackground,
+                            child: InkWell(
+                              splashColor: Colors.green.withAlpha(30),
+                              onTap: (){
+                                //do something
+                                if(_answerState!=AnswerState.NotAnswered){
+                                  setState(() {
+                                    nextQuestion();
+                                  });
+                                }
+                                else if(_answerState==AnswerState.NotAnswered && currentAnswer == currentQuestion.answer){
+                                  playSound('audios/correct.wav');
+                                  correctAnswer();
+                                  setState(() {
+                                    progress = ((index+1)/(module.chooseImages.length))/3;
+                                  });
+                                  setState(() {
+                                    _answerState = AnswerState.Correct;
+                                    checkText = 'NEXT';
+                                  });
+
+                                }
+                                else if(currentAnswer != currentQuestion.answer){
+                                  playSound('audios/incorrect.wav');
+                                  wrongAnswer(currentQuestion.answer);
+                                  setState(() {
+                                    progress = ((index+1)/(module.chooseImages.length))/3;
+                                  });
+                                  setState(() {
+                                    _answerState = AnswerState.Wrong;
+                                    checkText = 'NEXT';
+                                    checkButtonBackground = Colors.redAccent;
+                                  });
+
+                                }
+
+                              },
+                              child: Container(
+                                margin: EdgeInsets.all(10),
+                                width: 300,
+                                height: 30,
+                                child: Text(
+                                  checkText,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: checkButtonTextColor,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w700
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                ),
-              )
+                  )
+                ],
+              ),
             ],
           ),
         ),

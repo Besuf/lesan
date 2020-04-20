@@ -52,14 +52,12 @@ class _SampleScreenState extends State<SampleScreen> {
                       secondChild: Container(
                         height: 130,
                         width: double.infinity,
-                        color: _answerState == AnswerState.Correct
-                            ? Colors.green[400]
-                            : Colors.red[400],
+                        color: Colors.green[400],
                         child: Container(
                           padding: EdgeInsets.symmetric(
                               vertical: 8.0, horizontal: 10.0),
                           child: Text(
-                            _textContent,
+                           'Correct',
                             style: TextStyle(
                               color: Colors.white,
                             ),

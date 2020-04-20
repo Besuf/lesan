@@ -5,6 +5,7 @@ import 'package:lesan/models/questionTypes.dart';
 import 'package:audioplayers/audio_cache.dart';
 
 
+enum AnswerState { Correct, Wrong, NotAnswered }
 
 class WordPuzzle extends StatefulWidget {
   static const routeName = 'work_puzzle';
@@ -46,12 +47,17 @@ class _WordPuzzleState extends State<WordPuzzle> {
   Question2 _puzzle;
   double progress;
   List<Word2> _selectedWords = [];
+  AnswerState _answerState;
+  String _textContent = '';
+  Color checkButtonBackground = Colors.lightGreen;
+
   @override
   void initState() {
     // TODO: implement initState
     module = widget.module;
     index = widget.index;
     progress = 0.6666 + ((index)/(module.chooseImages.length))/3;
+    _answerState = AnswerState.NotAnswered;
     super.initState();
     _puzzle = module.wordPuzzels[index];
 
@@ -75,17 +81,40 @@ class _WordPuzzleState extends State<WordPuzzle> {
   }
   void _checkAnswer() {
     if (listEquals(_puzzle.correctSequence, _selectedWords)) {
-      isCorrect = true;
+      correctAnswer();
 
     } else {
-      isCorrect = false;
+      String t1='';
+      for(int i=0; i<_puzzle.correctSequence.length; i++){
+        t1+= _puzzle.correctSequence[i].text + ' ';
+      }
+      wrongAnswer(t1);
 
     }
     setState(() {
       _puzzleChecked = true;
     });
   }
+  void correctAnswer() {
+    setState(() {
+      _answerState = AnswerState.Correct;
+      _textContent = 'Correct';
+    });
+  }
 
+  void wrongAnswer(String correctAnswer) {
+    setState(() {
+      _answerState = AnswerState.Wrong;
+      _textContent = 'Incorrect: answer is \"$correctAnswer\"';
+    });
+  }
+
+  void reset() {
+    setState(() {
+      _answerState = AnswerState.NotAnswered;
+      _textContent = '';
+    });
+  }
   void _gotoNextPuzzle() {
     int nextIndex;
     if(module.wordPuzzels.length==this.index+1){
@@ -205,8 +234,16 @@ class _WordPuzzleState extends State<WordPuzzle> {
       key: _scaffoldKey,
       body: SafeArea(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: _answerState==AnswerState.NotAnswered?
+             MainAxisAlignment.spaceEvenly:
+              MainAxisAlignment.spaceBetween
+          ,
           children: <Widget>[
+            _answerState==AnswerState.NotAnswered? Container(
+              height: 0,
+            ): Container(
+              height: 5,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
@@ -242,71 +279,99 @@ class _WordPuzzleState extends State<WordPuzzle> {
 
               ],
             ),
+            _answerState==AnswerState.NotAnswered? Container(
+              height: 10,
+            ): Container(
+              height: 10,
+            ),
             _renderSource(),
             _renderChoice(),
             _renderSelectionList(),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
+            Stack(
               children: <Widget>[
-                GestureDetector(
-                  onTap: (){
-                    _checkAnswer();
-                    setState(() {
-                      if(checkText=='Check'){
-                        setState(() {
-                          progress = 0.666 + ((index+1)/(module.chooseImages.length))/3;
-                        });
-                        String t1,t2='';
-                        Color background;
-                        if(isCorrect){
-                          playSound('audios/correct.wav');
-                          t1 = 'Correct';
-                          t2 = '';
-                          background = Colors.greenAccent;
-                        }else{
-                          playSound('audios/incorrect.wav');
-                          t1 = 'Incorrect';
-                          background = Colors.redAccent;
-                        }
-                        checkText = 'Continue';
-                        _scaffoldKey.currentState.showSnackBar(
-                          SnackBar(
-                            behavior: SnackBarBehavior.floating,
-                            duration: Duration(seconds: 2),
-                            content: Text(
-                              t1,
-                              style: TextStyle(
-                                color: Colors.black38,
-                                fontSize: 20.0,
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    child: Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: <Widget>[
+                        AnimatedCrossFade(
+                          firstChild: Container(),
+                          secondChild: Container(
+                            height: 130,
+                            width: double.infinity,
+                            color: _answerState == AnswerState.Correct?
+                            Colors.lightGreen[300]:
+                            Colors.red[200],
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 8.0, horizontal: 10.0),
+                              child: Text(
+                                _textContent,
+                                style: TextStyle(
+                                    color: _answerState==AnswerState.Correct?
+                                    Colors.lightGreen[600]:
+                                    Colors.red,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w900
+                                ),
                               ),
                             ),
-                            backgroundColor: background,
                           ),
-                        );
-                      }else{
-                        //nextQuestion();
-                        _gotoNextPuzzle();
-                      }
-
-                    });
-
-                  },
-                  child: Card(
-                    child: Container(
-                      width: 300,
-                      margin: EdgeInsets.all(10),
-                      child: Text(
-                        checkText,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20
+                          duration: Duration(milliseconds: 200),
+                          crossFadeState: _answerState == AnswerState.NotAnswered
+                              ? CrossFadeState.showFirst
+                              : CrossFadeState.showSecond,
+                          secondCurve: Curves.easeOutBack.flipped,
+                          firstCurve: Curves.easeOutBack.flipped,
                         ),
-                        textAlign: TextAlign.center,
-                      ),
+                        Container(
+                          margin: EdgeInsets.only(bottom: 20),
+                          color: checkButtonBackground,
+                          child: InkWell(
+                            splashColor: Colors.green.withAlpha(30),
+                            onTap: (){
+                              setState(() {
+                                if(_answerState==AnswerState.NotAnswered){
+                                  _checkAnswer();
+                                  setState(() {
+                                    progress = 0.666 + ((index+1)/(module.chooseImages.length))/3;
+                                  });
+                                  String t1,t2='';
+                                  Color background;
+                                  if(_answerState == AnswerState.Correct){
+                                    playSound('audios/correct.wav');
+                                  }else{
+                                    playSound('audios/incorrect.wav');
+                                    checkButtonBackground = Colors.redAccent;
+                                  }
+                                  checkText = 'Continue';
+                                }else{
+                                  //nextQuestion();
+                                  _gotoNextPuzzle();
+                                }
+                              });
+                            },
+                            child: Container(
+                              margin: EdgeInsets.all(10),
+                              width: 300,
+                              height: 30,
+                              child: Text(
+                                checkText,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w700
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    color: Colors.green,
                   ),
-                ),
+                )
               ],
             ),
           ],

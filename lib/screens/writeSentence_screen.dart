@@ -5,6 +5,8 @@ import 'package:lesan/screens/word_puzzle_screen.dart';
 import 'package:audioplayers/audio_cache.dart';
 import 'package:lesan/models/questionTypes.dart';
 
+enum AnswerState { Correct, Wrong, NotAnswered }
+
 class WriteSentenceScreen extends StatelessWidget {
   static final String routeName = 'writeSentence_screen';
   final Module module;
@@ -35,13 +37,16 @@ class _WriteSentenceState extends State<WriteSentence> {
   Question3 currentQuestion;
   List<Word3> currentAnswer = List<Word3>();
   String checkText = 'Check';
-
+  AnswerState _answerState;
+  String _textContent = '';
+  Color checkButtonBackground = Colors.lightGreen;
   @override
   void initState() {
     // TODO: implement initState
     module = widget.module;
     index = widget.index;
     progress = 0.33 + ((index)/(module.chooseImages.length))/3;
+    _answerState = AnswerState.NotAnswered;
     super.initState();
     initQuestion();
   }
@@ -83,10 +88,30 @@ class _WriteSentenceState extends State<WriteSentence> {
     final player  = AudioCache();
     player.play(fileName);
   }
+  void correctAnswer() {
+    setState(() {
+      _answerState = AnswerState.Correct;
+      _textContent = 'Correct';
+    });
+  }
+
+  void wrongAnswer(String correctAnswer) {
+    setState(() {
+      _answerState = AnswerState.Wrong;
+      _textContent = 'Incorrect: answer is \"$correctAnswer\"';
+    });
+  }
+
+  void reset() {
+    setState(() {
+      _answerState = AnswerState.NotAnswered;
+      _textContent = '';
+    });
+  }
   bool isCorrect(){
     bool result = true;
     if(currentAnswer.length!=currentQuestion.options.length){
-      result = false;
+      return false;
     }
     for(int i=0; i<currentAnswer.length;i++){
       if(currentAnswer[i].text != currentQuestion.correctAnswer[i].text){
@@ -347,9 +372,15 @@ class _WriteSentenceState extends State<WriteSentence> {
           child: SizedBox.expand(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: _answerState==AnswerState.NotAnswered?
+              MainAxisAlignment.spaceAround:
+              MainAxisAlignment.spaceBetween,
               children: <Widget>[
-
+                _answerState==AnswerState.NotAnswered? Container(
+                  height: 5,
+                ): Container(
+                  height: 0,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
@@ -384,6 +415,11 @@ class _WriteSentenceState extends State<WriteSentence> {
                     ),
 
                   ],
+                ),
+                _answerState==AnswerState.NotAnswered? Container(
+                  height: 5,
+                ): Container(
+                  height: 0,
                 ),
                 Container(
                     margin: EdgeInsets.fromLTRB(15, 0, 15, 0),
@@ -439,87 +475,103 @@ class _WriteSentenceState extends State<WriteSentence> {
                   ],
                 ),//answer space
                 Container(
-                  margin: EdgeInsets.only(left: 15),
-                  child: getOptionsWidget()
-                ),//options
+                    margin: EdgeInsets.only(left: 15),
+                    child: getOptionsWidget()
+                ),
                 Center(
                   child: Column(
                     children: <Widget>[
-                      Card(
+                      Stack(
+                        children: <Widget>[
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Container(
+                              child: Stack(
+                                alignment: Alignment.bottomCenter,
+                                children: <Widget>[
+                                  AnimatedCrossFade(
+                                    firstChild: Container(),
+                                    secondChild: Container(
+                                      height: 130,
+                                      width: double.infinity,
+                                      color: _answerState == AnswerState.Correct?
+                                      Colors.lightGreen[300]:
+                                      Colors.red[200],
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 8.0, horizontal: 10.0),
+                                        child: Text(
+                                          _textContent,
+                                          style: TextStyle(
+                                              color: _answerState==AnswerState.Correct?
+                                              Colors.lightGreen[600]:
+                                              Colors.red,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w900
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    duration: Duration(milliseconds: 200),
+                                    crossFadeState: _answerState == AnswerState.NotAnswered
+                                        ? CrossFadeState.showFirst
+                                        : CrossFadeState.showSecond,
+                                    secondCurve: Curves.easeOutBack.flipped,
+                                    firstCurve: Curves.easeOutBack.flipped,
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(bottom: 20),
+                                    color: checkButtonBackground,
+                                    child: InkWell(
+                                      splashColor: Colors.green.withAlpha(30),
+                                      onTap: (){
+                                        setState(() {
+                                          if(_answerState == AnswerState.NotAnswered){
+                                            setState(() {
+                                              progress = 0.33+((index+1)/(module.chooseImages.length))/3;
+                                            });
+                                            if(isCorrect()){
+                                              playSound('audios/correct.wav');
+                                              correctAnswer();
+                                            }else if(!isCorrect()){
+                                              checkButtonBackground = Colors.redAccent;
+                                              playSound('audios/incorrect.wav');
+                                              String t2='';
+                                              for(int i=0; i<currentQuestion.correctAnswer.length; i++){
+                                                t2 += currentQuestion.correctAnswer[i].text + ' ';
+                                              }
+                                              wrongAnswer(t2);
+                                            }
+                                            checkText = 'Continue';
+                                          }
+                                          else{
+                                            nextQuestion();
+                                          }
 
-                        child: Container(
-                          width: 300,
-                          margin: EdgeInsets.all(10),
-                          child: Text(
-                            'Can\'t listen now',
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 20
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
+                                        });
 
-                      ),
-                      GestureDetector(
-                        onTap: (){
-                          setState(() {
-                            if(checkText=='Check'){
-                              setState(() {
-                                progress = 0.33+((index+1)/(module.chooseImages.length))/3;
-                              });
-                              String t1,t2='';
-                              Color background;
-                              if(isCorrect()){
-                                playSound('audios/correct.wav');
-                                t1 = 'Correct';
-                                t2 = '';
-                                background = Colors.greenAccent;
-                              }else{
-                                playSound('audios/incorrect.wav');
-                                t1 = 'Incorrect';
-                                for(int i=0; i<currentQuestion.correctAnswer.length; i++){
-                                  t2 += currentQuestion.correctAnswer[i].text;
-                                }
-                                background = Colors.redAccent;
-                              }
-                              checkText = 'Continue';
-                              _scaffoldKey.currentState.showSnackBar(
-                                SnackBar(
-                                  behavior: SnackBarBehavior.floating,
-                                  duration: Duration(seconds: 2),
-                                  content: Text(
-                                    t1,
-                                    style: TextStyle(
-                                      color: Colors.black38,
-                                      fontSize: 20.0,
+                                      },
+                                      child: Container(
+                                        margin: EdgeInsets.all(10),
+                                        width: 300,
+                                        height: 30,
+                                        child: Text(
+                                          checkText,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.w700
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                  backgroundColor: background,
-                                ),
-                              );
-                            }else{
-                              nextQuestion();
-                            }
-
-                          });
-
-                        },
-                        child: Card(
-                          child: Container(
-                            width: 300,
-                            margin: EdgeInsets.all(10),
-                            child: Text(
-                              checkText,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20
+                                ],
                               ),
-                              textAlign: TextAlign.center,
                             ),
-                          ),
-                          color: Colors.green,
-                        ),
+                          )
+                        ],
                       ),
                     ],
                   ),
