@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' ;
 import 'package:lesan/screens/home_screen.dart';
 import 'package:lesan/screens/language_select.dart';
+import 'package:lesan/screens/sample_screen.dart';
 import 'package:lesan/screens/word_puzzle_screen.dart';
 import 'package:lesan/screens/level_screen.dart';
 import 'package:lesan/screens/chooseImage_screen.dart';
@@ -39,14 +40,15 @@ class MyApp extends StatelessWidget {
               color: Colors.black87),
         ),
       ),
-      initialRoute: LevelScreen.routeName,
+      initialRoute: SampleScreen.routeName,
       routes: {
         HomeScreen.routeName: (_) => HomeScreen(),
         LanguageSelect.routeName: (_) => LanguageSelect(),
         WordPuzzle.routeName: (_) => WordPuzzle(),
         LevelScreen.routeName: (_) => LevelScreen(),
         ChooseImageScreen.routeName: (_)=>ChooseImageScreen(),
-        WriteSentenceScreen.routeName: (_)=>WriteSentenceScreen()
+        WriteSentenceScreen.routeName: (_)=>WriteSentenceScreen(),
+        SampleScreen.routeName: (_) => SampleScreen()
       },
     );
   }
