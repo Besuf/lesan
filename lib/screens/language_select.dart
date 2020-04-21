@@ -6,53 +6,59 @@ class LanguageSelect extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<String> _languages = ['Amharic', 'English'];
+    List<Lang> _languages = [
+      Lang(languageName:'ትግርኛ',languageSymbolURL:'assets/images/tigray.png'),
+      Lang(languageName:'Qafaraf',languageSymbolURL:'assets/images/afar.png'),
+      Lang(languageName:'አማርኛ',languageSymbolURL:'assets/images/amhara.png'),
+      Lang(languageName:'Oromiffa',languageSymbolURL:'assets/images/oromo.png')
+    ];
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'I want to learn',
+          'I WANT TO LEARN',
           style: Theme.of(context).textTheme.body1,
         ),
         centerTitle: true,
       ),
       body: SafeArea(
-        child: Container(
-          margin: EdgeInsets.only(top: 10.0, left: 5.0, right: 5.0),
-          decoration: BoxDecoration(
-            border: Border.all(width: 1.0, color: Colors.grey),
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(15.0),
-              topRight: Radius.circular(15.0),
+        child: Column(
+          children: <Widget>[
+            Container(
+              height: 10,
             ),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: _languages
-                .map(
-                  (language) => InkWell(
-                    onTap: () => Navigator.of(context).pushNamed(LevelScreen.routeName),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(width: 1.0)
-                        )
-                      ),
-                      child: ListTile(
-                        leading: Icon(
-                          Icons.language,
-                          color: Theme.of(context).accentColor,
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children:
+              _languages
+                  .map(
+                    (language) => InkWell(
+                      onTap: () => Navigator.of(context).pushNamed(LevelScreen.routeName),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(width: 0.3)
+                          )
                         ),
-                        title: Text(language, style: Theme.of(context).textTheme.body2,),
+                        child: ListTile(
+                          leading: Image(image: AssetImage(language.languageSymbolURL), height: 50, width: 50,),
+                          title: Text(language.languageName, style: Theme.of(context).textTheme.body2,),
+                        ),
                       ),
                     ),
-                  ),
-                )
-                .toList(),
-          ),
+                  )
+                  .toList(),
+            ),
+          ],
         ),
       ),
     );
   }
+}
+
+class Lang{
+  String languageName;
+  String languageSymbolURL;
+  Lang({this.languageName, this.languageSymbolURL});
 }

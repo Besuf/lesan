@@ -43,7 +43,7 @@ class _LevelState extends State<Level> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Icon(Icons.flag),
+            Image(image: AssetImage('assets/images/tigray.png'), height: 40, width: 40,),
             Icon(Icons.cast),
             Icon(Icons.find_replace),
             Icon(Icons.headset, color: Colors.red)
