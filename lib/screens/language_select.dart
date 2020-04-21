@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lesan/screens/level_screen.dart';
 
 class LanguageSelect extends StatelessWidget {
   static const routeName = 'language_select';
@@ -30,18 +31,21 @@ class LanguageSelect extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: _languages
                 .map(
-                  (language) => Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(width: 1.0)
-                      )
-                    ),
-                    child: ListTile(
-                      leading: Icon(
-                        Icons.language,
-                        color: Theme.of(context).accentColor,
+                  (language) => InkWell(
+                    onTap: () => Navigator.of(context).pushNamed(LevelScreen.routeName),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(width: 1.0)
+                        )
                       ),
-                      title: Text(language, style: Theme.of(context).textTheme.body2,),
+                      child: ListTile(
+                        leading: Icon(
+                          Icons.language,
+                          color: Theme.of(context).accentColor,
+                        ),
+                        title: Text(language, style: Theme.of(context).textTheme.body2,),
+                      ),
                     ),
                   ),
                 )

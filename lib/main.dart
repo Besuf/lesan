@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
               color: Colors.black87),
         ),
       ),
-      initialRoute: LevelScreen.routeName,
+      initialRoute: LanguageSelect.routeName,
       routes: {
         HomeScreen.routeName: (_) => HomeScreen(),
         LanguageSelect.routeName: (_) => LanguageSelect(),
