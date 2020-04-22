@@ -24,7 +24,7 @@ class WordChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Chip(
-      backgroundColor: _word.selected ? Colors.white24 : Colors.green,
+      backgroundColor: _word.selected ? Colors.white24 : Color(0xff5d5d5d),
       label: Text(
         _word.text,
         style: TextStyle(
@@ -49,7 +49,7 @@ class _WordPuzzleState extends State<WordPuzzle> {
   List<Word2> _selectedWords = [];
   AnswerState _answerState;
   String _textContent = '';
-  Color checkButtonBackground = Colors.lightGreen;
+  Color checkButtonBackground = Color(0xff3a3042);
 
   @override
   void initState() {
@@ -163,13 +163,13 @@ class _WordPuzzleState extends State<WordPuzzle> {
         Container(
           padding: EdgeInsets.all(20.0),
           decoration: BoxDecoration(
-            color: Colors.lightBlueAccent,
+            color: Color(0xfff1f1f2),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Text(
             _puzzle.sourceText,
          style: TextStyle(
-           color: Colors.white,
+           color: Color(0xff3a3042),
          ),
           ),
         ),
@@ -195,7 +195,7 @@ class _WordPuzzleState extends State<WordPuzzle> {
                   _removeSelection(word);
                 },
                 child: Chip(
-                  backgroundColor: Colors.green,
+                  backgroundColor: Color(0xff5d5d5d),
                   label: Text(
                       word.text,
                     style: TextStyle(
@@ -233,148 +233,147 @@ class _WordPuzzleState extends State<WordPuzzle> {
     return Scaffold(
       key: _scaffoldKey,
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: _answerState==AnswerState.NotAnswered?
-             MainAxisAlignment.spaceEvenly:
-              MainAxisAlignment.spaceBetween
-          ,
-          children: <Widget>[
-            _answerState==AnswerState.NotAnswered? Container(
-              height: 0,
-            ): Container(
-              height: 5,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                GestureDetector(
-                  onTap: (){
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => LevelScreen()),
-                    );
-                  },
-                  child: Icon(
-                    Icons.close,
+        child: SizedBox.expand(
+          child: Column(
+            mainAxisAlignment: _answerState==AnswerState.NotAnswered?
+               MainAxisAlignment.spaceAround:
+               MainAxisAlignment.spaceBetween
+            ,
+            children: <Widget>[
+//              _answerState==AnswerState.NotAnswered? Container(
+//                height: 0,
+//              ): Container(
+//                height: 5,
+//              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => LevelScreen()),
+                      );
+                    },
+                    child: Icon(
+                      Icons.close,
+                      size: 30,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  Center(
+                    child: Container(
+                      width: 200,
+                      height: 20,
+                      child: LinearProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(Color(0xffff8d3b)),
+                          backgroundColor: Color(0xFFE6E6E6),
+                          value: progress
+                      ),
+                    ),
+                  ),
+                  Icon(
+                    Icons.favorite,
                     size: 30,
-                    color: Colors.grey,
+                    color: Colors.redAccent,
                   ),
-                ),
-                Center(
-                  child: Container(
-                    width: 200,
-                    height: 20,
-                    child: LinearProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
-                        backgroundColor: Color(0xFFE6E6E6),
-                        value: progress
-                    ),
-                  ),
-                ),
-                Icon(
-                  Icons.favorite,
-                  size: 30,
-                  color: Colors.redAccent,
-                ),
 
-              ],
-            ),
-            _answerState==AnswerState.NotAnswered? Container(
-              height: 10,
-            ): Container(
-              height: 10,
-            ),
-            _renderSource(),
-            _renderChoice(),
-            _renderSelectionList(),
-            Stack(
-              children: <Widget>[
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    child: Stack(
-                      alignment: Alignment.bottomCenter,
-                      children: <Widget>[
-                        AnimatedCrossFade(
-                          firstChild: Container(),
-                          secondChild: Container(
-                            height: 130,
-                            width: double.infinity,
-                            color: _answerState == AnswerState.Correct?
-                            Colors.lightGreen[300]:
-                            Colors.red[200],
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 8.0, horizontal: 10.0),
-                              child: Text(
-                                _textContent,
-                                style: TextStyle(
-                                    color: _answerState==AnswerState.Correct?
-                                    Colors.lightGreen[600]:
-                                    Colors.red,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w900
+                ],
+              ),
+
+              _renderSource(),
+              _renderChoice(),
+              _renderSelectionList(),
+              Stack(
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      child: Stack(
+                        alignment: Alignment.bottomCenter,
+                        children: <Widget>[
+                          AnimatedCrossFade(
+                            firstChild: Container(),
+                            secondChild: Container(
+                              height: 130,
+                              width: double.infinity,
+                              color: _answerState == AnswerState.Correct?
+                              Color(0x99ff8d3b):
+                              Color(0x993a3042),
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 8.0, horizontal: 10.0),
+                                child: Text(
+                                  _textContent,
+                                  style: TextStyle(
+                                      color: _answerState==AnswerState.Correct?
+                                      Color(0xfff1f2f2):
+                                      Color(0xfff1f2f2),
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w900
+                                  ),
                                 ),
                               ),
                             ),
+                            duration: Duration(milliseconds: 200),
+                            crossFadeState: _answerState == AnswerState.NotAnswered
+                                ? CrossFadeState.showFirst
+                                : CrossFadeState.showSecond,
+                            secondCurve: Curves.easeOutBack.flipped,
+                            firstCurve: Curves.easeOutBack.flipped,
                           ),
-                          duration: Duration(milliseconds: 200),
-                          crossFadeState: _answerState == AnswerState.NotAnswered
-                              ? CrossFadeState.showFirst
-                              : CrossFadeState.showSecond,
-                          secondCurve: Curves.easeOutBack.flipped,
-                          firstCurve: Curves.easeOutBack.flipped,
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(bottom: 20),
-                          color: checkButtonBackground,
-                          child: InkWell(
-                            splashColor: Colors.green.withAlpha(30),
-                            onTap: (){
-                              setState(() {
-                                if(_answerState==AnswerState.NotAnswered){
-                                  _checkAnswer();
-                                  setState(() {
-                                    progress = 0.666 + ((index+1)/(module.chooseImages.length))/3;
-                                  });
-                                  String t1,t2='';
-                                  Color background;
-                                  if(_answerState == AnswerState.Correct){
-                                    playSound('audios/correct.wav');
+                          Container(
+                            margin: EdgeInsets.only(bottom: 20),
+                            color: checkButtonBackground,
+                            child: InkWell(
+                              splashColor: Colors.green.withAlpha(30),
+                              onTap: (){
+                                setState(() {
+                                  if(_answerState==AnswerState.NotAnswered){
+                                    _checkAnswer();
+                                    setState(() {
+                                      progress = 0.666 + ((index+1)/(module.chooseImages.length))/3;
+                                    });
+                                    String t1,t2='';
+                                    Color background;
+                                    if(_answerState == AnswerState.Correct){
+                                      playSound('audios/correct.wav');
+                                      checkButtonBackground = Color(0xffff8d3b);
+                                    }else{
+                                      playSound('audios/incorrect.wav');
+                                      checkButtonBackground = Color(0xff3a3042);
+                                    }
+                                    checkText = 'Continue';
                                   }else{
-                                    playSound('audios/incorrect.wav');
-                                    checkButtonBackground = Colors.redAccent;
+                                    //nextQuestion();
+                                    _gotoNextPuzzle();
                                   }
-                                  checkText = 'Continue';
-                                }else{
-                                  //nextQuestion();
-                                  _gotoNextPuzzle();
-                                }
-                              });
-                            },
-                            child: Container(
-                              margin: EdgeInsets.all(10),
-                              width: 300,
-                              height: 30,
-                              child: Text(
-                                checkText,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.w700
+                                });
+                              },
+                              child: Container(
+                                margin: EdgeInsets.all(10),
+                                width: 300,
+                                height: 30,
+                                child: Text(
+                                  checkText,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w700
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                )
-              ],
-            ),
-          ],
+                  )
+                ],
+              ),
+            ],
+          ),
         ),
       ),
 

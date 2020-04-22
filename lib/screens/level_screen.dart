@@ -293,7 +293,7 @@ class _LevelState extends State<Level> {
               Container(
                 margin: EdgeInsets.fromLTRB(15,0,15,15),
                 decoration: BoxDecoration(
-                  color: Colors.grey,
+                  color: Color(0xfff1f2f2),
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                 ),
                 child: Container(

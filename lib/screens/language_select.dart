@@ -15,9 +15,14 @@ class LanguageSelect extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xfff1f2f2),
         title: Text(
           'I WANT TO LEARN',
-          style: Theme.of(context).textTheme.body1,
+          style: TextStyle(
+            color: Color(0xff3a3042),
+            fontSize: 14,
+            fontWeight: FontWeight.w100
+          )
         ),
         centerTitle: true,
       ),
@@ -38,7 +43,7 @@ class LanguageSelect extends StatelessWidget {
                       child: Container(
                         decoration: BoxDecoration(
                           border: Border(
-                            bottom: BorderSide(width: 0.3)
+                            bottom: BorderSide(width: 0.5, color: Color(0xffff8d3b)),
                           )
                         ),
                         child: ListTile(

@@ -203,7 +203,7 @@ class _ChooseState extends State<Choose> {
                       width: 200,
                       height: 20,
                       child: LinearProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                          valueColor: AlwaysStoppedAnimation<Color>(Color(0xffff8d3b)),
                           backgroundColor: Color(0xFFE6E6E6),
                           value: progress
                       ),
@@ -235,8 +235,8 @@ class _ChooseState extends State<Choose> {
                   GestureDetector(
                     onTap: (){
                       setState(() {
-                        card1BorderColor = Colors.lightBlueAccent;
-                        card1Background = Color(0xff9de6ff);
+                        card1BorderColor = Colors.white;
+                        card1Background = Color(0x99ff8d3b);
                         card3BorderColor = Colors.grey;
                         card3Background = Colors.white;
                         card4BorderColor = Colors.grey;
@@ -244,7 +244,7 @@ class _ChooseState extends State<Choose> {
                         card2BorderColor = Colors.grey;
                         card2Background = Colors.white;
                         checkButtonTextColor = Colors.white;
-                        checkButtonBackground = Colors.lightGreen;
+                        checkButtonBackground = Color(0xff3a3042);
                         currentAnswer = currentQuestion.option1.optionName;
                       });
                       playSound(currentQuestion.option1.soundURL);
@@ -291,8 +291,8 @@ class _ChooseState extends State<Choose> {
                   GestureDetector(
                     onTap: (){
                       setState(() {
-                        card2BorderColor = Colors.lightBlueAccent;
-                        card2Background = Color(0xff9de6ff);
+                        card2BorderColor = Colors.white;
+                        card2Background = Color(0x99ff8d3b);
                         card1BorderColor = Colors.grey;
                         card1Background = Colors.white;
                         card3BorderColor = Colors.grey;
@@ -300,7 +300,7 @@ class _ChooseState extends State<Choose> {
                         card4BorderColor = Colors.grey;
                         card4Background = Colors.white;
                         checkButtonTextColor = Colors.white;
-                        checkButtonBackground = Colors.lightGreen;
+                        checkButtonBackground = Color(0xff3a3042);
                         currentAnswer = currentQuestion.option2.optionName;
                       });
                       playSound(currentQuestion.option2.soundURL);
@@ -352,8 +352,8 @@ class _ChooseState extends State<Choose> {
                   GestureDetector(
                     onTap: (){
                       setState(() {
-                        card3BorderColor = Colors.lightBlueAccent;
-                        card3Background = Color(0xff9de6ff);
+                        card3BorderColor = Colors.white;
+                        card3Background = Color(0x99ff8d3b);
                         card1BorderColor = Colors.grey;
                         card1Background = Colors.white;
                         card2BorderColor = Colors.grey;
@@ -361,7 +361,7 @@ class _ChooseState extends State<Choose> {
                         card4BorderColor = Colors.grey;
                         card4Background = Colors.white;
                         checkButtonTextColor = Colors.white;
-                        checkButtonBackground = Colors.lightGreen;
+                        checkButtonBackground = Color(0xff3a3042);
                         currentAnswer = currentQuestion.option3.optionName;
                       });
                       playSound(currentQuestion.option3.soundURL);
@@ -408,8 +408,8 @@ class _ChooseState extends State<Choose> {
                   GestureDetector(
                     onTap: (){
                       setState(() {
-                        card4BorderColor = Colors.lightBlueAccent;
-                        card4Background = Color(0xff9de6ff);
+                        card4BorderColor = Colors.white;
+                        card4Background = Color(0x99ff8d3b);
                         card1BorderColor = Colors.grey;
                         card1Background = Colors.white;
                         card3BorderColor = Colors.grey;
@@ -417,7 +417,7 @@ class _ChooseState extends State<Choose> {
                         card2BorderColor = Colors.grey;
                         card2Background = Colors.white;
                         checkButtonTextColor = Colors.white;
-                        checkButtonBackground = Colors.lightGreen;
+                        checkButtonBackground = Color(0xff3a3042);
                         currentAnswer = currentQuestion.option2.optionName;
                       });
                       playSound(currentQuestion.option4.soundURL);
@@ -477,8 +477,8 @@ class _ChooseState extends State<Choose> {
                               height: 130,
                               width: double.infinity,
                               color: _answerState == AnswerState.Correct?
-                                  Colors.lightGreen[300]:
-                                  Colors.red[200],
+                                  Color(0x99ff8d3b):
+                                  Color(0x993a3042),
                               child: Container(
                                 padding: EdgeInsets.symmetric(
                                     vertical: 8.0, horizontal: 10.0),
@@ -486,8 +486,8 @@ class _ChooseState extends State<Choose> {
                                   _textContent,
                                   style: TextStyle(
                                     color: _answerState==AnswerState.Correct?
-                                        Colors.lightGreen[600]:
-                                        Colors.red,
+                                        Color(0xfff1f2f2):
+                                        Color(0xfff1f2f2),
                                     fontSize: 20,
                                     fontWeight: FontWeight.w900
                                   ),
@@ -522,6 +522,7 @@ class _ChooseState extends State<Choose> {
                                   setState(() {
                                     _answerState = AnswerState.Correct;
                                     checkText = 'NEXT';
+                                    checkButtonBackground = Color(0xffff8d3b);
                                   });
 
                                 }
@@ -534,7 +535,7 @@ class _ChooseState extends State<Choose> {
                                   setState(() {
                                     _answerState = AnswerState.Wrong;
                                     checkText = 'NEXT';
-                                    checkButtonBackground = Colors.redAccent;
+                                    checkButtonBackground = Color(0xff3a3042);
                                   });
 
                                 }

@@ -39,7 +39,7 @@ class _WriteSentenceState extends State<WriteSentence> {
   String checkText = 'Check';
   AnswerState _answerState;
   String _textContent = '';
-  Color checkButtonBackground = Colors.lightGreen;
+  Color checkButtonBackground = Color(0xff3a3042);
   @override
   void initState() {
     // TODO: implement initState
@@ -136,7 +136,7 @@ class _WriteSentenceState extends State<WriteSentence> {
                  },
                  child: Chip(
                    label: currentQuestion.options[i].isSelected ? Text('') : Text(currentQuestion.options[i].text, style: TextStyle(color: Colors.white),),
-                   backgroundColor: currentQuestion.options[i].isSelected ? Colors.white24 : Colors.green,
+                   backgroundColor: currentQuestion.options[i].isSelected ? Colors.white24 : Color(0xff5d5d5d),
                    elevation:  currentQuestion.options[i].isSelected ? 0 : 10 ,
               ),
                )
@@ -165,7 +165,7 @@ class _WriteSentenceState extends State<WriteSentence> {
                 },
                 child: Chip(
                   label: currentQuestion.options[i].isSelected ? Text('') : Text(currentQuestion.options[i].text,style: TextStyle(color: Colors.white),),
-                  backgroundColor: currentQuestion.options[i].isSelected ? Colors.white24 : Colors.green,
+                  backgroundColor: currentQuestion.options[i].isSelected ? Colors.white24 : Color(0xff5d5d5d),
                   elevation:  currentQuestion.options[i].isSelected ? 0 : 10 ,
                 ),
               )
@@ -183,7 +183,7 @@ class _WriteSentenceState extends State<WriteSentence> {
                 },
                 child: Chip(
                   label: currentQuestion.options[i].isSelected ? Text('') : Text(currentQuestion.options[i].text,style: TextStyle(color: Colors.white),),
-                  backgroundColor: currentQuestion.options[i].isSelected ? Colors.white24 : Colors.green,
+                  backgroundColor: currentQuestion.options[i].isSelected ? Colors.white24 : Color(0xff5d5d5d),
                   elevation:  currentQuestion.options[i].isSelected ? 0 : 10 ,
                 ),
               )
@@ -225,7 +225,7 @@ class _WriteSentenceState extends State<WriteSentence> {
                 },
                 child: Chip(
                   label: currentQuestion.options[i].isSelected ? Text('') : Text(currentQuestion.options[i].text, style: TextStyle(color: Colors.white),),
-                  backgroundColor: currentQuestion.options[i].isSelected ? Colors.white24 : Colors.green,
+                  backgroundColor: currentQuestion.options[i].isSelected ? Colors.white24 : Color(0xff5d5d5d),
                   elevation:  currentQuestion.options[i].isSelected ? 0 : 10 ,
                 ),
               )
@@ -243,7 +243,7 @@ class _WriteSentenceState extends State<WriteSentence> {
                 },
                 child: Chip(
                   label: currentQuestion.options[i].isSelected ? Text('') : Text(currentQuestion.options[i].text, style: TextStyle(color: Colors.white),),
-                  backgroundColor: currentQuestion.options[i].isSelected ? Colors.white24 : Colors.green,
+                  backgroundColor: currentQuestion.options[i].isSelected ? Colors.white24 : Color(0xff5d5d5d),
                   elevation:  currentQuestion.options[i].isSelected ? 0 : 10 ,
                 ),
               )
@@ -261,7 +261,7 @@ class _WriteSentenceState extends State<WriteSentence> {
                 },
                 child: Chip(
                   label: currentQuestion.options[i].isSelected ? Text('') : Text(currentQuestion.options[i].text, style: TextStyle(color: Colors.white),),
-                  backgroundColor: currentQuestion.options[i].isSelected ? Colors.white24 : Colors.green,
+                  backgroundColor: currentQuestion.options[i].isSelected ? Colors.white24 : Color(0xff5d5d5d),
                   elevation:  currentQuestion.options[i].isSelected ? 0 : 10 ,
                 ),
               )
@@ -315,7 +315,7 @@ class _WriteSentenceState extends State<WriteSentence> {
             },
             child: Chip(
               label: Text(currentAnswer[i].text, style: TextStyle(color: Colors.white),),
-              backgroundColor: Colors.green,
+              backgroundColor: Color(0xff5d5d5d),
             ),
       ));
     }
@@ -352,7 +352,7 @@ class _WriteSentenceState extends State<WriteSentence> {
                   color: Colors.white
                 ),
               ),
-              backgroundColor: Colors.green,
+              backgroundColor: Color(0xff5d5d5d),
             ),
           ));
     }
@@ -377,9 +377,9 @@ class _WriteSentenceState extends State<WriteSentence> {
               MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 _answerState==AnswerState.NotAnswered? Container(
-                  height: 5,
-                ): Container(
                   height: 0,
+                ): Container(
+                  height: 5,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -402,7 +402,7 @@ class _WriteSentenceState extends State<WriteSentence> {
                         width: 200,
                         height: 20,
                         child: LinearProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                            valueColor: AlwaysStoppedAnimation<Color>(Color(0xffff8d3b)),
                             backgroundColor: Color(0xFFE6E6E6),
                             value: progress
                         ),
@@ -417,7 +417,7 @@ class _WriteSentenceState extends State<WriteSentence> {
                   ],
                 ),
                 _answerState==AnswerState.NotAnswered? Container(
-                  height: 5,
+                  height: 0,
                 ): Container(
                   height: 0,
                 ),
@@ -437,7 +437,7 @@ class _WriteSentenceState extends State<WriteSentence> {
                   },
                   child: Card(
                     margin: EdgeInsets.only(left: 40),
-                    color: Colors.lightBlueAccent,
+                    color: Color(0xffff8d3b),
                     child: Container(
                       margin: EdgeInsets.all(20),
                       child: Icon(
@@ -495,8 +495,8 @@ class _WriteSentenceState extends State<WriteSentence> {
                                       height: 130,
                                       width: double.infinity,
                                       color: _answerState == AnswerState.Correct?
-                                      Colors.lightGreen[300]:
-                                      Colors.red[200],
+                                      Color(0x99ff8d3b):
+                                      Color(0x993a3042),
                                       child: Container(
                                         padding: EdgeInsets.symmetric(
                                             vertical: 8.0, horizontal: 10.0),
@@ -504,8 +504,8 @@ class _WriteSentenceState extends State<WriteSentence> {
                                           _textContent,
                                           style: TextStyle(
                                               color: _answerState==AnswerState.Correct?
-                                              Colors.lightGreen[600]:
-                                              Colors.red,
+                                              Color(0xfff1f2f2):
+                                              Color(0xfff1f2f2),
                                               fontSize: 20,
                                               fontWeight: FontWeight.w900
                                           ),
@@ -533,8 +533,9 @@ class _WriteSentenceState extends State<WriteSentence> {
                                             if(isCorrect()){
                                               playSound('audios/correct.wav');
                                               correctAnswer();
+                                              checkButtonBackground = Color(0xffff8d3b);
                                             }else if(!isCorrect()){
-                                              checkButtonBackground = Colors.redAccent;
+                                              checkButtonBackground = Color(0xff3a3042);
                                               playSound('audios/incorrect.wav');
                                               String t2='';
                                               for(int i=0; i<currentQuestion.correctAnswer.length; i++){
