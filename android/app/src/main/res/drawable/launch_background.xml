@@ -8,6 +8,6 @@
         <bitmap
             android:gravity="fill"
 			android:tileMode="disabled"
-            android:src="@drawable/splash" />
+            android:src="@drawable/capture" />
     </item>
 </layer-list>
