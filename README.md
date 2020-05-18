@@ -1,4 +1,4 @@
-# cinema
+# Lesan
 
 Simple language learning application
 
